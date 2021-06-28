@@ -42,14 +42,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build the image with Buildah
-        run: |
-          sudo podman run \
-            --rm \
-            --privileged \
-            -v ${{ github.workspace }}:/mnt:Z \
-            -v /var/lib/containers:/var/lib/containers \
-            quay.io/buildah/stable \
-            buildah unshare /mnt/build.sh -a ${{ matrix.arch }}
+        run: sudo ./build.sh -a ${{ matrix.arch }}
 
       - name: Tag the image for Fedora 34
         run: sudo podman tag localhost/picocom localhost/picocom:34
