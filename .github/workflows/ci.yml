@@ -22,6 +22,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SHELLCHECK_OPTS: --color=always
           SHFMT_OPTS: -s
+          _CONTAINERS_USERNS_CONFIGURED: ""
         with:
           sh_checker_comment: true
 
@@ -41,6 +42,46 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
 
+      - name: Configure /etc/containers/containers.conf
+        run: |
+          echo '
+          [containers]
+          netns="host"
+          userns="host"
+          ipcns="host"
+          utsns="host"
+          cgroupns="host"
+          cgroups="disabled"
+          log_driver = "k8s-file"
+          [engine]
+          cgroup_manager = "cgroupfs"
+          events_logger="file"
+          runtime="crun"
+          ' | sudo tee /etc/containers/containers.conf
+
+      - name: Configure /etc/containers/containers.conf permissions
+        run: sudo chmod 644 /etc/containers/containers.conf
+
+      - name: Configure ~/.config/containers/containers.conf
+        run: |
+          echo '
+          [containers]
+          volumes = [
+            "/proc:/proc",
+          ]
+          ' | sudo tee ~/.config/containers/containers.conf
+
+      - name: Configure storage
+        run: sudo sed -i -e 's|^#mount_program|mount_program|g' -e '/additionalimage.*/a "/var/lib/shared",' -e 's|^mountopt[[:space:]]*=.*$|mountopt = "nodev,fsync=0"|g' /etc/containers/storage.conf
+
+      - name: Create files / directories
+        run: |
+          sudo mkdir -p /var/lib/shared/overlay-images /var/lib/shared/overlay-layers /var/lib/shared/vfs-images /var/lib/shared/vfs-layers;
+          sudo touch /var/lib/shared/overlay-images/images.lock;
+          sudo touch /var/lib/shared/overlay-layers/layers.lock;
+          sudo touch /var/lib/shared/vfs-images/images.lock;
+          sudo touch /var/lib/shared/vfs-layers/layers.lock
+
       - name: Configure UID
         run: echo $(id -u):10000:5000 | sudo tee -a /etc/subuid
       - name: Configure GID
@@ -55,6 +96,8 @@ jobs:
           podman run \
             --rm \
             --arch arm64 \
+            --device /dev/fuse:rw \
+            --security-opt label=disable --security-opt seccomp=unconfined \
             --privileged \
             -w /home/build \
             -u build \
@@ -69,6 +112,8 @@ jobs:
           podman run \
             --rm \
             --arch amd64 \
+            --device /dev/fuse:rw \
+            --security-opt label=disable --security-opt seccomp=unconfined \
             --privileged \
             -w /home/build \
             -u build \

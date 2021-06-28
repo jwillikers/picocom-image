@@ -22,6 +22,7 @@
         "openfortivpn",
         "picocom",
         "repos",
+        "seccomp",
         "sh",
         "shellcheck",
         "shfmt",
