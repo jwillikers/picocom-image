@@ -54,7 +54,6 @@ jobs:
             --privileged \
             -w /home/build \
             -u build \
-            --userns keep-id \
             -v ${{ github.workspace }}:/home/build:Z \
             -v ~/.local/share/containers:/home/build/.local/share/containers \
             quay.io/buildah/stable:latest \
@@ -69,7 +68,6 @@ jobs:
             --privileged \
             -w /home/build \
             -u build \
-            --userns keep-id \
             -v ${{ github.workspace }}:/home/build:Z \
             -v ~/.local/share/containers:/home/build/.local/share/containers \
             quay.io/buildah/stable:latest \
