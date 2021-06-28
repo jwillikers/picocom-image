@@ -42,9 +42,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Configure UID
-        run: echo $(id -u):10000:5000 > /etc/subuid
+        run: echo $(id -u):10000:5000 | sudo tee -a /etc/subuid
       - name: Configure GID
-        run: echo $(id -g):10000:5000 > /etc/subgid
+        run: echo $(id -g):10000:5000 | sudo tee -a /etc/subgid
 
       - name: Build the image with Buildah
         run: |
