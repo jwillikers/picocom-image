@@ -47,12 +47,10 @@ jobs:
           sudo podman run \
             --rm \
             --security-opt label=disable \
-            --userns keep-id \
-            --user build \
-            -v ${{ github.workspace }}:/home/build:Z \
-            -v /var/lib/containers:/home/build/.local/share/containers \
+            -v ${{ github.workspace }}:/mnt:Z \
+            -v /var/lib/containers:/var/lib/containers \
             quay.io/buildah/stable \
-            buildah unshare /home/build/build.sh -a ${{ matrix.arch }}
+            buildah unshare /mnt/build.sh -a ${{ matrix.arch }}
 
       - name: Tag the image for Fedora 34
         run: sudo podman tag localhost/picocom localhost/picocom:34
