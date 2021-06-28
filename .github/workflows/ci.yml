@@ -45,7 +45,7 @@ jobs:
         run: |
           sudo podman run \
             --rm \
-            --arch arm64
+            --arch arm64 \
             --privileged \
             -v ${{ github.workspace }}:/mnt:Z \
             -v /var/lib/containers:/var/lib/containers \
@@ -57,7 +57,7 @@ jobs:
         run: |
           sudo podman run \
             --rm \
-            --arch amd64
+            --arch amd64 \
             --privileged \
             -v ${{ github.workspace }}:/mnt:Z \
             -v /var/lib/containers:/var/lib/containers \
