@@ -95,25 +95,10 @@ These instructions are intended for users of {Fedora-Silverblue}, where the pack
 
 . Run the shell script to build the image.
 +
---
 [source,sh]
 ----
-➜ podman run \
-    --rm \
-    --security-opt label=disable \
-    --userns keep-id \
-    --user build \
-    -v "$PWD":/home/build:Z \
-    -v ~/.local/share/containers:/home/build/.local/share/containers \
-    -e STORAGE_DRIVER=btrfs \
-    quay.io/buildah/stable \
-    buildah unshare /home/build/build.sh
+➜ buildah unshare ~/Projects/picocom-image/build.sh
 ----
-
-Here I set the storage driver for Btrfs with `-e STORAGE_DRIVER=btrfs`, since I use that driver on the host.
-Remove this option if you're using the _overlay_ driver.
-Those using the ZFS storage driver should change `btrfs` to `zfs`.
---
 
 . Test the image with the `test.sh` shell script.
 +
