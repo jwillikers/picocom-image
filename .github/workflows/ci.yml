@@ -102,6 +102,7 @@ jobs:
             --device /dev/fuse:rw \
             --security-opt label=disable --security-opt seccomp=unconfined \
             --privileged \
+            --group-add keep-groups \
             -w /home/build \
             -u build \
             -v ${{ github.workspace }}:/home/build:Z \
@@ -118,6 +119,7 @@ jobs:
             --device /dev/fuse:rw \
             --security-opt label=disable --security-opt seccomp=unconfined \
             --privileged \
+            --group-add keep-groups \
             -w /home/build \
             -u build \
             -v ${{ github.workspace }}:/home/build:Z \
