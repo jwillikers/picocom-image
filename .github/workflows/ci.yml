@@ -33,8 +33,8 @@ jobs:
     strategy:
       matrix:
         arch:
-          - aarch64
-          - x86_64
+          - amd64
+          - arm64
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -97,7 +97,7 @@ jobs:
       #   run: podman system migrate
 
       - name: Build the image with Buildah
-        run: buildah unshare ./build.sh
+        run: buildah unshare ./build.sh -a ${{ matrix.arch }}
 
       - name: Tag the image for Fedora 34
         run: podman tag localhost/picocom localhost/picocom:34
@@ -117,8 +117,8 @@ jobs:
     strategy:
       matrix:
         arch:
-          - aarch64
-          - x86_64
+          - amd64
+          - arm64
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -145,10 +145,10 @@ jobs:
       # aarch64
       - uses: actions/download-artifact@v2
         with:
-          name: picocom-aarch64
+          name: picocom-arm64
 
       - name: Load the aarch64 image
-        run: podman image load -i picocom-aarch64.tar
+        run: podman image load -i picocom-arm64.tar
 
       - name: Add the aarch64 image to the manifest
         run: buildah manifest add picocom-multiarch:latest localhost/picocom
@@ -156,10 +156,10 @@ jobs:
       # x86_64
       - uses: actions/download-artifact@v2
         with:
-          name: picocom-x86_64
+          name: picocom-amd64
 
       - name: Load the x86_64 image
-        run: podman image load -i picocom-x86_64.tar
+        run: podman image load -i picocom-amd64.tar
 
       - name: Add the x86_64 image to the manifest
         run: buildah manifest add picocom-multiarch:latest localhost/picocom
