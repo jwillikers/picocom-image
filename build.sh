@@ -10,7 +10,7 @@ Help() {
 	echo
 	echo "Syntax: build.sh [-a|h]"
 	echo "options:"
-	echo "a     Build for the specified target architecture, i.e. amd64, armhfp, arm64."
+	echo "a     Build for the specified target architecture, i.e. aarch64, x86_64"
 	echo "h     Print this Help."
 	echo
 }
@@ -46,9 +46,9 @@ CONTAINER=$(buildah from --arch "$ARCHITECTURE" scratch)
 IMAGE="picocom"
 MOUNTPOINT=$(buildah mount "$CONTAINER")
 
-dnf -y install --installroot "$MOUNTPOINT" --releasever 33 glibc-minimal-langpack picocom --nodocs --setopt install_weak_deps=False
+dnf -y --forcearch="$ARCHITECTURE" install --installroot "$MOUNTPOINT" --releasever 33 glibc-minimal-langpack picocom --nodocs --setopt install_weak_deps=False
 
-dnf clean all -y --installroot "$MOUNTPOINT" --releasever 33
+dnf clean all -y --forcearch="$ARCHITECTURE" --installroot "$MOUNTPOINT" --releasever 33
 
 buildah unmount "$CONTAINER"
 

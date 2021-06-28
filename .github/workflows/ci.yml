@@ -32,9 +32,8 @@ jobs:
     strategy:
       matrix:
         arch:
-          - armhfp
-          - arm64
-          - amd64
+          - aarch64
+          - x86_64
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -70,9 +69,8 @@ jobs:
     strategy:
       matrix:
         arch:
-          - armhfp
-          - arm64
-          - amd64
+          - aarch64
+          - x86_64
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -96,37 +94,26 @@ jobs:
       - name: Create a manifest
         run: buildah manifest create picocom-multiarch:latest
 
-      # armhfp
-      - uses: actions/download-artifact@v2
-        with:
-          name: picocom-armhfp
-
-      - name: Load the armhfp image
-        run: podman image load -i picocom-armhfp.tar
-
-      - name: Add the armhfp image to the manifest
-        run: buildah manifest add picocom-multiarch:latest localhost/picocom
-
       # aarch64
       - uses: actions/download-artifact@v2
         with:
-          name: picocom-arm64
+          name: picocom-aarch64
 
-      - name: Load the arm64 image
-        run: podman image load -i picocom-arm64.tar
+      - name: Load the aarch64 image
+        run: podman image load -i picocom-aarch64.tar
 
-      - name: Add the arm64 image to the manifest
+      - name: Add the aarch64 image to the manifest
         run: buildah manifest add picocom-multiarch:latest localhost/picocom
 
       # x86_64
       - uses: actions/download-artifact@v2
         with:
-          name: picocom-amd64
+          name: picocom-x86_64
 
-      - name: Load the amd64 image
-        run: podman image load -i picocom-amd64.tar
+      - name: Load the x86_64 image
+        run: podman image load -i picocom-x86_64.tar
 
-      - name: Add the amd64 image to the manifest
+      - name: Add the x86_64 image to the manifest
         run: buildah manifest add picocom-multiarch:latest localhost/picocom
 
       - name: Push latest manifest and images to quay.io
