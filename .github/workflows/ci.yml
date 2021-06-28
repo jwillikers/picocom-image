@@ -48,7 +48,7 @@ jobs:
 
       - name: Build the image with Buildah
         run: |
-          sudo podman run \
+          podman run \
             --rm \
             --arch arm64 \
             --privileged \
@@ -60,7 +60,7 @@ jobs:
 
       - name: Build the image with Buildah
         run: |
-          sudo podman run \
+          podman run \
             --rm \
             --arch amd64 \
             --privileged \
@@ -71,10 +71,10 @@ jobs:
         if: ${{ matrix.arch == 'x86_64' }}
 
       - name: Tag the image for Fedora 34
-        run: sudo podman tag localhost/picocom localhost/picocom:34
+        run: podman tag localhost/picocom localhost/picocom:34
 
       - name: Export the image
-        run: sudo podman image save --format oci-archive -o picocom-${{ matrix.arch }}.tar localhost/picocom
+        run: podman image save --format oci-archive -o picocom-${{ matrix.arch }}.tar localhost/picocom
 
       - uses: actions/upload-artifact@v2
         with:
