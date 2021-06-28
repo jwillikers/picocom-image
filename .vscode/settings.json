@@ -1,0 +1,32 @@
+{
+    "cSpell.words": [
+        "Buildah",
+        "Podman",
+        "Silverblue",
+        "aarch",
+        "adoc",
+        "armhfp",
+        "btrfs",
+        "cmake",
+        "commit's",
+        "creds",
+        "ide",
+        "ide's",
+        "ifdef",
+        "jwillikers",
+        "koalaman",
+        "ludeeus",
+        "multiarch",
+        "mvdan",
+        "openfortivpn",
+        "picocom",
+        "repos",
+        "sh",
+        "shellcheck",
+        "shfmt",
+        "toolchain",
+        "userns",
+        "venv",
+        "workdir"
+    ]
+}

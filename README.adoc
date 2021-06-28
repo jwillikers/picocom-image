@@ -1,0 +1,159 @@
+= picocom Image
+Jordan Williams <jordan@jwillikers.com>
+:experimental:
+:icons: font
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:Buildah: https://buildah.io/[Buildah]
+:Fedora: https://getfedora.org/[Fedora]
+:Fedora-Silverblue: https://silverblue.fedoraproject.org/[Fedora Silverblue]
+:OpenSSH: https://www.openssh.com/[OpenSSH]
+:Podman: https://podman.io/[Podman]
+
+image:https://img.shields.io/github/workflow/status/jwillikers/picocom-image/CI/main[GitHub Workflow Status]
+
+A container image for running the picocom serial console.
+
+== Synopsis
+
+Supported architectures:: `amd64`, `arm32v7`, `arm64v8`
+User:: user
+Password:: password
+
+== Quick Start
+
+Use picocom from the image as follows.
+
+[source,sh]
+----
+➜ podman run \
+    --rm \
+    --group-add keep-groups \
+    --security-opt label=disable \
+    --device=/dev/ttyACM0 \
+    --name picocom \
+    -it quay.io/jwillikers/picocom:latest \
+    picocom /dev/ttyACM0
+----
+
+== Build
+
+This project uses {Buildah} and {Podman} for building and testing the image.
+To ensure the shell scripts are kept in good working order, the project uses ShellCheck and shfmt.
+A set of pre-commit checks are readily available to ensure your code is up-to-spec before it is committed.
+Both ShellCheck and shfmt are run via Podman using their official Docker containers as pre-commit hooks.
+Cool, right?
+Instructions for setting up a development environment, building the image, and testing the image follow.
+These instructions are intended for users of {Fedora-Silverblue}, where the packages `buildah`, `git`, and `podman` are already available.
+
+. Clone this repository.
++
+[source,sh]
+----
+➜ git -C ~/Projects clone git@github.com:jwillikers/picocom-image.git
+----
+
+. Create a fresh Python virtual environment.
++
+[source,sh]
+----
+➜ python -m venv ~/Projects/picocom-image/venv
+----
+
+. Activate the virtual environment.
++
+[source,sh]
+----
+➜ source ~/Projects/picocom-image/venv/bin/activate.fish
+----
+
+. Install the development dependencies.
++
+[source,sh]
+----
+➜ pip install -r ~/Projects/picocom-image/requirements-dev.txt
+----
+
+. Change into the project directory.
++
+[source,sh]
+----
+➜ cd ~/Projects/picocom-image
+----
+
+. Install pre-commit's Git hooks
++
+[source,sh]
+----
+➜ pre-commit install
+----
+
+. Run the shell script to build the image.
++
+--
+[source,sh]
+----
+➜ podman run \
+    --rm \
+    --security-opt label=disable \
+    --userns keep-id \
+    --user build \
+    -v "$PWD":/home/build:Z \
+    -v ~/.local/share/containers:/home/build/.local/share/containers \
+    -e STORAGE_DRIVER=btrfs \
+    quay.io/buildah/stable \
+    buildah unshare /home/build/build.sh
+----
+
+Here I set the storage driver for Btrfs with `-e STORAGE_DRIVER=btrfs`, since I use that driver on the host.
+Remove this option if you're using the _overlay_ driver.
+Those using the ZFS storage driver should change `btrfs` to `zfs`.
+--
+
+. Test the image with the `test.sh` shell script.
++
+[source,sh]
+----
+➜ ~/Projects/picocom-image/test.sh
+----
+
+== Contributing
+
+Contributions in the form of issues, feedback, and even pull requests are welcome.
+Make sure to adhere to the project's link:CODE_OF_CONDUCT.adoc[Code of Conduct].
+
+== Open Source Software
+
+This project is built on the hard work of countless open source contributors.
+Several of these projects are enumerated below.
+
+* https://asciidoctor.org/[Asciidoctor]
+* {Buildah}
+* {Fedora}
+* {Fedora-Silverblue}
+* https://git-scm.com/[Git]
+* https://www.linuxfoundation.org/[Linux]
+* {OpenSSH}
+* {Podman}
+* https://www.python.org/[Python]
+* https://rouge.jneen.net/[Rouge]
+* https://www.ruby-lang.org/en/[Ruby]
+
+== Code of Conduct
+
+The project's Code of Conduct is available in the link:CODE_OF_CONDUCT.adoc[Code of Conduct] file.
+
+== License
+
+This repository is licensed under the https://www.gnu.org/licenses/gpl-3.0.html[GPLv3], available in the link:LICENSE.adoc[license file].
+
+© 2021 Jordan Williams
+
+== Authors
+
+mailto:{email}[{author}]
