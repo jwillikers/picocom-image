@@ -46,7 +46,7 @@ jobs:
         run: |
           sudo podman run \
             --rm \
-            --security-opt label=disable \
+            --privileged \
             -v ${{ github.workspace }}:/mnt:Z \
             -v /var/lib/containers:/var/lib/containers \
             quay.io/buildah/stable \
