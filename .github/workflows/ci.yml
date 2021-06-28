@@ -41,6 +41,11 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
 
+      - name: Configure UID
+        run: echo $(id -u):10000:5000 > /etc/subuid
+      - name: Configure GID
+        run: echo $(id -g):10000:5000 > /etc/subgid
+
       - name: Build the image with Buildah
         run: |
           sudo podman run \

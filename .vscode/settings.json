@@ -25,6 +25,8 @@
         "sh",
         "shellcheck",
         "shfmt",
+        "subgid",
+        "subuid",
         "toolchain",
         "userns",
         "venv",
