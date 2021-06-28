@@ -42,6 +42,9 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
 
+      - name: Make directory
+        run: mkdir -p ~/.config/containers
+
       - name: Configure /etc/containers/containers.conf
         run: |
           echo '
@@ -69,7 +72,7 @@ jobs:
           volumes = [
             "/proc:/proc",
           ]
-          ' | sudo tee ~/.config/containers/containers.conf
+          ' | tee ~/.config/containers/containers.conf
 
       - name: Configure storage
         run: sudo sed -i -e 's|^#mount_program|mount_program|g' -e '/additionalimage.*/a "/var/lib/shared",' -e 's|^mountopt[[:space:]]*=.*$|mountopt = "nodev,fsync=0"|g' /etc/containers/storage.conf
