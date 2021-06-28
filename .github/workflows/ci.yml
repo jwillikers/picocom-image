@@ -131,7 +131,7 @@ jobs:
         run: podman image load -i picocom-${{ matrix.arch }}.tar
 
       - name: Create a container and start the OpenSSH server using the image
-        run: podman run --rm --name test-container -it localhost/picocom picocom --help
+        run: podman run --arch ${{ matrix.arch }} --rm --name test-container -it localhost/picocom picocom --help
 
   publish:
     name: Publish
