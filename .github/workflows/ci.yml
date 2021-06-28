@@ -44,22 +44,21 @@ jobs:
 
       - name: Build the image with Buildah
         run: |
-          mkdir -p ~/.local/share/containers
-          podman run \
-          --rm \
-          --security-opt label=disable \
-          --userns keep-id \
-          --user build \
-          -v ${{ github.workspace }}:/home/build:Z \
-          -v ~/.local/share/containers:/home/build/.local/share/containers \
-          quay.io/buildah/stable \
-          buildah unshare /home/build/build.sh -a ${{ matrix.arch }}
+          sudo podman run \
+            --rm \
+            --security-opt label=disable \
+            --userns keep-id \
+            --user build \
+            -v ${{ github.workspace }}:/home/build:Z \
+            -v /var/lib/containers:/home/build/.local/share/containers \
+            quay.io/buildah/stable \
+            buildah unshare /home/build/build.sh -a ${{ matrix.arch }}
 
       - name: Tag the image for Fedora 34
-        run: podman tag localhost/picocom localhost/picocom:34
+        run: sudo podman tag localhost/picocom localhost/picocom:34
 
       - name: Export the image
-        run: podman image save --format oci-archive -o picocom-${{ matrix.arch }}.tar localhost/picocom
+        run: sudo podman image save --format oci-archive -o picocom-${{ matrix.arch }}.tar localhost/picocom
 
       - uses: actions/upload-artifact@v2
         with:
