@@ -97,7 +97,7 @@ jobs:
       #   run: podman system migrate
 
       - name: Build the image with Buildah
-        run: buildah unshare ./build.sh -a ${{ matrix.arch }}
+        run: buildah unshare ./build-podman.sh -a ${{ matrix.arch }}
 
       - name: Tag the image for Fedora 34
         run: podman tag localhost/picocom localhost/picocom:34
