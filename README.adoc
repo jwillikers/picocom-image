@@ -22,8 +22,6 @@ A container image for running the picocom serial console.
 == Synopsis
 
 Supported architectures:: `amd64`, `arm32v7`, `arm64v8`
-User:: user
-Password:: password
 
 == Quick Start
 

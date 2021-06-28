@@ -10,7 +10,7 @@ Help() {
 	echo
 	echo "Syntax: build.sh [-a|h]"
 	echo "options:"
-	echo "a     Build for the specified target architecture, i.e. aarch64, x86_64"
+	echo "a     Build for the specified target architecture, i.e. amd64, arm64, armhfp"
 	echo "h     Print this Help."
 	echo
 }
