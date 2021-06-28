@@ -52,10 +52,13 @@ jobs:
             --rm \
             --arch arm64 \
             --privileged \
-            -v ${{ github.workspace }}:/mnt:Z \
-            -v /var/lib/containers:/var/lib/containers \
+            -w /home/build \
+            -u build \
+            -userns keep-id \
+            -v ${{ github.workspace }}:/home/build:Z \
+            -v ~/.local/share/containers:/home/build/.local/share/containers \
             quay.io/buildah/stable:latest \
-            buildah unshare /mnt/build.sh -a ${{ matrix.arch }}
+            buildah unshare /home/build/build.sh -a ${{ matrix.arch }}
         if: ${{ matrix.arch == 'aarch64' }}
 
       - name: Build the image with Buildah
@@ -64,10 +67,13 @@ jobs:
             --rm \
             --arch amd64 \
             --privileged \
-            -v ${{ github.workspace }}:/mnt:Z \
-            -v /var/lib/containers:/var/lib/containers \
+            -w /home/build \
+            -u build \
+            -userns keep-id \
+            -v ${{ github.workspace }}:/home/build:Z \
+            -v ~/.local/share/containers:/home/build/.local/share/containers \
             quay.io/buildah/stable:latest \
-            buildah unshare /mnt/build.sh -a ${{ matrix.arch }}
+            buildah unshare /home/build/build.sh -a ${{ matrix.arch }}
         if: ${{ matrix.arch == 'x86_64' }}
 
       - name: Tag the image for Fedora 34
