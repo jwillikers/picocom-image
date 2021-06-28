@@ -58,6 +58,6 @@ buildah config --label "io.containers.autoupdate=registry" "$CONTAINER"
 
 buildah config --author "jordan@jwillikers.com" "$CONTAINER"
 
-buildah commit "$CONTAINER" "$IMAGE"
+buildah commit --squash "$CONTAINER" "$IMAGE"
 
 buildah rm "$CONTAINER"
