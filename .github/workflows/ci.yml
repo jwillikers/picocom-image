@@ -45,6 +45,10 @@ jobs:
         run: echo $(id -u):10000:5000 | sudo tee -a /etc/subuid
       - name: Configure GID
         run: echo $(id -g):10000:5000 | sudo tee -a /etc/subgid
+      - name: Fix newuidmap permissions
+        run: sudo chmod 4755 /usr/bin/newuidmap
+      - name: Fix newgidmap permissions
+        run: sudo chmod 4755 /usr/bin/newgidmap
 
       - name: Build the image with Buildah
         run: |
