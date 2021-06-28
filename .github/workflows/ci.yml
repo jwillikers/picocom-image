@@ -44,6 +44,7 @@ jobs:
 
       - name: Build the image with Buildah
         run: |
+          mkdir -p ~/.local/share/containers
           podman run \
           --rm \
           --security-opt label=disable \
