@@ -42,48 +42,48 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
 
-      - name: Make directory
-        run: mkdir -p ~/.config/containers
+      # - name: Make directory
+      #   run: mkdir -p ~/.config/containers
 
-      - name: Configure /etc/containers/containers.conf
-        run: |
-          echo '
-          [containers]
-          netns="host"
-          userns="host"
-          ipcns="host"
-          utsns="host"
-          cgroupns="host"
-          cgroups="disabled"
-          log_driver = "k8s-file"
-          [engine]
-          cgroup_manager = "cgroupfs"
-          events_logger="file"
-          runtime="crun"
-          ' | sudo tee /etc/containers/containers.conf
+      # - name: Configure /etc/containers/containers.conf
+      #   run: |
+      #     echo '
+      #     [containers]
+      #     netns="host"
+      #     userns="host"
+      #     ipcns="host"
+      #     utsns="host"
+      #     cgroupns="host"
+      #     cgroups="disabled"
+      #     log_driver = "k8s-file"
+      #     [engine]
+      #     cgroup_manager = "cgroupfs"
+      #     events_logger="file"
+      #     runtime="crun"
+      #     ' | sudo tee /etc/containers/containers.conf
 
-      - name: Configure /etc/containers/containers.conf permissions
-        run: sudo chmod 644 /etc/containers/containers.conf
+      # - name: Configure /etc/containers/containers.conf permissions
+      #   run: sudo chmod 644 /etc/containers/containers.conf
 
-      - name: Configure ~/.config/containers/containers.conf
-        run: |
-          echo '
-          [containers]
-          volumes = [
-            "/proc:/proc",
-          ]
-          ' | tee ~/.config/containers/containers.conf
+      # - name: Configure ~/.config/containers/containers.conf
+      #   run: |
+      #     echo '
+      #     [containers]
+      #     volumes = [
+      #       "/proc:/proc",
+      #     ]
+      #     ' | tee ~/.config/containers/containers.conf
 
-      - name: Configure storage
-        run: sudo sed -i -e 's|^#mount_program|mount_program|g' -e '/additionalimage.*/a "/var/lib/shared",' -e 's|^mountopt[[:space:]]*=.*$|mountopt = "nodev,fsync=0"|g' /etc/containers/storage.conf
+      # - name: Configure storage
+      #   run: sudo sed -i -e 's|^#mount_program|mount_program|g' -e '/additionalimage.*/a "/var/lib/shared",' -e 's|^mountopt[[:space:]]*=.*$|mountopt = "nodev,fsync=0"|g' /etc/containers/storage.conf
 
-      - name: Create files / directories
-        run: |
-          sudo mkdir -p /var/lib/shared/overlay-images /var/lib/shared/overlay-layers /var/lib/shared/vfs-images /var/lib/shared/vfs-layers;
-          sudo touch /var/lib/shared/overlay-images/images.lock;
-          sudo touch /var/lib/shared/overlay-layers/layers.lock;
-          sudo touch /var/lib/shared/vfs-images/images.lock;
-          sudo touch /var/lib/shared/vfs-layers/layers.lock
+      # - name: Create files / directories
+      #   run: |
+      #     sudo mkdir -p /var/lib/shared/overlay-images /var/lib/shared/overlay-layers /var/lib/shared/vfs-images /var/lib/shared/vfs-layers;
+      #     sudo touch /var/lib/shared/overlay-images/images.lock;
+      #     sudo touch /var/lib/shared/overlay-layers/layers.lock;
+      #     sudo touch /var/lib/shared/vfs-images/images.lock;
+      #     sudo touch /var/lib/shared/vfs-layers/layers.lock
 
       # - name: Configure UID
       #   run: echo $(id -u):10000:5000 | sudo tee -a /etc/subuid
@@ -97,38 +97,7 @@ jobs:
       #   run: podman system migrate
 
       - name: Build the image with Buildah
-        run: |
-          podman run \
-            --rm \
-            --arch arm64 \
-            --device /dev/fuse:rw \
-            --security-opt label=disable --security-opt seccomp=unconfined \
-            --privileged \
-            --userns keep-id \
-            -w /home/build \
-            -u build \
-            -v ${{ github.workspace }}:/home/build:Z \
-            -v ~/.local/share/containers:/home/build/.local/share/containers \
-            quay.io/buildah/stable:latest \
-            buildah unshare /home/build/build.sh -a ${{ matrix.arch }}
-        if: ${{ matrix.arch == 'aarch64' }}
-
-      - name: Build the image with Buildah
-        run: |
-          podman run \
-            --rm \
-            --arch amd64 \
-            --device /dev/fuse:rw \
-            --security-opt label=disable --security-opt seccomp=unconfined \
-            --privileged \
-            --userns keep-id \
-            -w /home/build \
-            -u build \
-            -v ${{ github.workspace }}:/home/build:Z \
-            -v ~/.local/share/containers:/home/build/.local/share/containers \
-            quay.io/buildah/stable:latest \
-            buildah unshare /home/build/build.sh -a ${{ matrix.arch }}
-        if: ${{ matrix.arch == 'x86_64' }}
+        run: buildah unshare ./build.sh
 
       - name: Tag the image for Fedora 34
         run: podman tag localhost/picocom localhost/picocom:34

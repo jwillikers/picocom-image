@@ -46,9 +46,9 @@ CONTAINER=$(buildah from --arch "$ARCHITECTURE" scratch)
 IMAGE="picocom"
 MOUNTPOINT=$(buildah mount "$CONTAINER")
 
-dnf -y --forcearch="$ARCHITECTURE" install --installroot "$MOUNTPOINT" --releasever 33 glibc-minimal-langpack picocom --nodocs --setopt install_weak_deps=False
+podman run --arch "$ARCHITECTURE" -v "$MOUNTPOINT":/mnt:rw registry.fedoraproject.org/fedora:latest bash -c "dnf -y install --installroot /mnt --releasever 34 glibc-minimal-langpack picocom --nodocs --setopt install_weak_deps=False"
 
-dnf clean all -y --forcearch="$ARCHITECTURE" --installroot "$MOUNTPOINT" --releasever 33
+podman run --arch "$ARCHITECTURE" -v "$MOUNTPOINT":/mnt:rw registry.fedoraproject.org/fedora:latest bash -c "dnf clean all -y --installroot /mnt --releasever 34"
 
 buildah unmount "$CONTAINER"
 
