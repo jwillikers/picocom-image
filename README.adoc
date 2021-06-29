@@ -12,12 +12,17 @@ endif::[]
 :Buildah: https://buildah.io/[Buildah]
 :Fedora: https://getfedora.org/[Fedora]
 :Fedora-Silverblue: https://silverblue.fedoraproject.org/[Fedora Silverblue]
+:Git: https://git-scm.com/[Git]
 :OpenSSH: https://www.openssh.com/[OpenSSH]
+:pre-commit: https://pre-commit.com/[pre-commit]
+:sh: https://pkg.go.dev/mvdan.cc/sh/v3[sh]
+:ShellCheck: https://www.shellcheck.net/[ShellCheck]
+:picocom: https://github.com/npat-efault/picocom[picocom]
 :Podman: https://podman.io/[Podman]
 
 image:https://img.shields.io/github/workflow/status/jwillikers/picocom-image/CI/main[GitHub Workflow Status]
 
-A container image for running the picocom serial console.
+A container image for running the {picocom} serial console.
 
 == Synopsis
 
@@ -42,9 +47,9 @@ Use picocom from the image as follows.
 == Build
 
 This project uses {Buildah} and {Podman} for building and testing the image.
-To ensure the shell scripts are kept in good working order, the project uses ShellCheck and shfmt.
-A set of pre-commit checks are readily available to ensure your code is up-to-spec before it is committed.
-Both ShellCheck and shfmt are run via Podman using their official Docker containers as pre-commit hooks.
+To ensure the shell scripts are kept in good working order, the project uses {ShellCheck} and {sh}.
+A set of {pre-commit} checks are readily available to ensure your code is up-to-spec before it is committed.
+Both ShellCheck and sh are run via Podman using their official Docker containers as pre-commit hooks.
 Cool, right?
 Instructions for setting up a development environment, building the image, and testing the image follow.
 These instructions are intended for users of {Fedora-Silverblue}, where the packages `buildah`, `git`, and `podman` are already available.
@@ -119,7 +124,7 @@ Several of these projects are enumerated below.
 * {Buildah}
 * {Fedora}
 * {Fedora-Silverblue}
-* https://git-scm.com/[Git]
+* {Git}
 * https://www.linuxfoundation.org/[Linux]
 * {OpenSSH}
 * {Podman}
